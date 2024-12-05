@@ -1,0 +1,2661 @@
+{
+	"info": {
+		"_postman_id": "40029763-fb1e-4cea-8d75-4742d0b65d2c",
+		"name": "Cloudability (CLDY) API for Customers",
+		"description": "This collection has been developed as Cloudability API Partner Training course. This can be used as part of learning to interact with our API suite and also in day-to-day operations as a catalyst to delivery.\n\n**KEY LINKS**\n\n[Frontdoor Authentication](https://help.apptio.com/en-us/frontdoor/admin-guide/api/overview-api-keys-faq.html)\n\n[Cloudability Authentication](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm)\n\n[Cloudability API v3 Overview](https://help.apptio.com/en-us/cloudability/api/v3/aboutcloudabilityapiv3.htm)\n\n**Endpoints Covered in this Course**:\n\n- [Business Mappings Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/business_mappings_endpoint.htm)\n- [Account Groups Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/account_groups_end_point.htm)\n- [Account Group Entries Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/account_group_entries.htm)\n- [Views Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/views_end_point.htm)\n- [Rightsizing Endpoints](https://help.apptio.com/en-us/cloudability/api/v3/rightsizing_end_points.htm)\n- [Vendor Credentials Endpoints](https://help.apptio.com/en-us/cloudability/api/v3/vendor_credentials_end_point_1.htm)\n    \n\n**Links Require US Frontdoor Access**\n\n<img src=\"https://content.pstmn.io/34ebe19a-2686-44ae-be90-55f4d2881dfc/aW1hZ2UucG5n\" width=\"423\" height=\"135\">",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21667924"
+	},
+	"item": [
+		{
+			"name": "000 Authentication",
+			"item": [
+				{
+					"name": "001 Cloudability API Key",
+					"item": [
+						{
+							"name": "Organization (CLDY Key)",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "username",
+											"value": "{{CLDY Key}}",
+											"type": "string"
+										},
+										{
+											"key": "password",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/organizations",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"organizations"
+									]
+								},
+								"description": "> Clooudability API Keys do not expire. As long as the user record is active in Cloudability, the attached API key can either be Enabled, Regenerated, or Disabled. \n  \n\nThis is the legacy authentication format. While it is still operational Cloudability customers are being pushed to the more secure Frontdoor Authentication. **CLDY API AUTH WILL BE DEPRICATED**\n\nFor this reason, it is important that your organization does not use this methodology when setting up mission critical automation.\n\n[Getting started with Cloudability API V3](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm)\n\n> Cloudability Keys can be created by follow this click path Cloudability > Profile > Manage Profile > Preferences > (Wait a Moment) > Cloudability API > Enable/Regenerate/Disable (See Snip) \n  \n\n<img src=\"https://content.pstmn.io/77d652f6-b08a-4bf1-b231-24b119d0fa53/aW1hZ2UucG5n\" alt=\"\" height=\"645\" width=\"1896\">"
+							},
+							"response": []
+						}
+					],
+					"description": "[Cloudability Authentication](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm) follows a bearer token or \"Skeleton key\" format in which a key is provided on a user basis. This key is then used in tandem with basic autheticaiton formats to interact with Cloudability v3 Endpoints. _**It is important to understand that this method of authentication is soon to be depricated in favor of the more secure Frontdoor Authentication method.**_\n\nIn demonstrating this Authentication method we will be hitting the **Organizaitons Endpoint**. Information gathered from this endpoint are critical to understanding your organizational setting the most important of which is the Cloudability Organizaiton (Org) ID.\n\nThis Id (Example Below) will be used when requesting items from support against your Cloudability environment including the critical Refetch and Reprocess.\n\n<img src=\"https://content.pstmn.io/cf6bc2aa-2484-4c66-aea2-6ae9721065dc/aW1hZ2UucG5n\" width=\"706\" height=\"269\">"
+				},
+				{
+					"name": "002 Frontdoor Auth (OpenToken)",
+					"item": [
+						{
+							"name": "1. Get OpenToken Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var t = postman.getResponseCookie(\"apptio-opentoken\").value;\r",
+											"pm.environment.set(\"apptio-opentoken\", t);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"keyAccess\": \"{{Frontdoor Public}}\",\r\n    \"keySecret\": \"{{Frontdoor Secret}}\"\r\n}"
+								},
+								"url": {
+									"raw": "https://frontdoor.apptio.com/service/apikeylogin",
+									"protocol": "https",
+									"host": [
+										"frontdoor",
+										"apptio",
+										"com"
+									],
+									"path": [
+										"service",
+										"apikeylogin"
+									]
+								},
+								"description": "The apptio-opentoken will be returned in response cookies and will last for 30 minutes.\n\nThis collection is designed to store the token as a variable in your current Postman Environment via test script.\n\n``` javascript\nvar t = postman.getResponseCookie(\"apptio-opentoken\").value;\npm.environment.set(\"apptio-opentoken\", t);\n\n```"
+							},
+							"response": []
+						},
+						{
+							"name": "2. Get Environment ID Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();\r",
+											"pm.environment.set(\"apptio-current-environment\", jsonData.id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://frontdoor.apptio.com/api/environment/{{Domain}}/{{Environment Name}}",
+									"protocol": "https",
+									"host": [
+										"frontdoor",
+										"apptio",
+										"com"
+									],
+									"path": [
+										"api",
+										"environment",
+										"{{Domain}}",
+										"{{Environment Name}}"
+									]
+								},
+								"description": "**Ensure that the ending of this URL includes //**\n\n**In my endpoint above this is reflected as /cloudabilitysandbox.com/cs but will be different per customer.**\n\nEndFragment  \n\nThe environment id (apptio-current-environment) will be returned in the response body.\n\n<img src=\"https://content.pstmn.io/a0d9c8d9-76ec-460a-8b2d-2f3fc0495132/aW1hZ2UucG5n\" width=\"557\" height=\"240\">\n\nThis collection is setup to store this as a variable in your current Postman Environment via this test script:\n\n``` javascript\nvar jsonData = pm.response.json();\npm.environment.set(\"apptio-current-environment\", jsonData.id);\n\n```\n\n**This environment id will never change and only needs to be called once.**"
+							},
+							"response": []
+						}
+					],
+					"description": "002 [Frontdoor Authentication](https://help.apptio.com/en-us/frontdoor/admin-guide/api/overview-api-keys-faq.html) is the standard across all Apptio products and it follows a key pair/opentoken methodology. A public and private key is attached to either a User or Service Account record in Access Administration and these keys are used to call for an Open Token.\n\nThis OpenToken can then be paired with the Apptio Current Environment ID to make call on the Cloudability API v3 endpoints for a period of 30 minutes before needing to call a new opentoken.\n\nAPI keys can be set to have \"No Experation\" or a \"90 Day Experation\".\n\n### Steps to calling any Apptio Endpoint with Frontdoor Auth:\n\n1. **Create API keys against a user or service account in Access Administration and elect for No Experation or 90-day Experation.**\n    1. This key must be given a Cloudability Admin permission at minimum. Keys can not have a higher level permission than the Frontdoor record they are attached to.\n2. **Call on the frontdoor endpoint with the Public and secret key in body as seen below (1. Get OpenToken)**\n    1. This token will be valid for 30-minutes.\n3. **The last piece of information you will need is the apptio-current-environment id of your cloudability instance. This endpoint should only ever be called one time as the** [**Environment ID**](https://help.apptio.com/en-us/frontdoor/admin-guide/api/api-environment.html?Highlight=environment) **will never change.**\n4. **Add your current apptio-opentoken and apptio-current-environment ID in the headers of any subsequent calls to authenticate. After 30-minutes you will need to call for a new/valid token.**"
+				}
+			],
+			"description": "The 000 Authentication section covers the two types of authentication that currently support Cloudability End Points. These two forms of authentivation include [Cloudability Authentication](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm) and [Frontdoor Authentication](https://help.apptio.com/en-us/frontdoor/admin-guide/api/overview-api-keys-faq.html).\n\n001 [Cloudability Authentication](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm) follows a bearer token or \"Skeleton key\" format in which a key is provided on a user basis. This key is then used in tandem with basic autheticaiton formats to interact with Cloudability v3 Endpoints. _**It is important to understand that this method of authentication is soon to be depricated in favor of the more secure Frontdoor Authentication method.**_\n\n002 [Frontdoor Authentication](https://help.apptio.com/en-us/frontdoor/admin-guide/api/overview-api-keys-faq.html) is the standard across all Apptio products and it follows a key pair/opentoken methodology. A public and private key is attached to either a User or Service Account record in Access Administration and these keys are used to call for an Open Token.\n\nThis OpenToken can then be paired with the Apptio Current Environment ID to make call on the Cloudability API v3 endpoints for a period of 30 minutes before needing to call a new opentoken.\n\nAPI keys can be set to have \"No Experation\" or a \"90 Day Experation\"."
+		},
+		{
+			"name": "100 Business Mappings",
+			"item": [
+				{
+					"name": "Retrieve Business Mappings Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/business-mappings",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"business-mappings"
+							]
+						},
+						"description": "Allows you to get a list of all current business mappings."
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Business Mapping Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"AZ\",\r\n    \"defaultValue\": \"south or north\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"DIMENSION['availability_zone'] == 'us-east-1'\",\r\n            \"valueExpression\": \"'East'\"\r\n        },\r\n        {\r\n            \"matchExpression\": \"DIMENSION['availability_zone'] == 'us-west-1'\",\r\n            \"valueExpression\": \"'West'\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/business-mappings",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"business-mappings"
+							]
+						},
+						"description": "POST = Create a Mapping\n\nCreate a single business mapping. See the following curl and JSON body as an example of a business mapping\n\n``` bash\ncurl -X POST https://api.cloudability.com/v3/business-mappings \\\\\n     -H 'Content-Type: application/json' \\\\\n     -H 'apptio-opentoken:<OpenToken>' \\\\\n     -H 'apptio-current-environment: <environment id>' \\\\\n     -u ‘[auth_token]:’ \\\\\n     -d @- << EOF\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create a Business Metric",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Total Calculated Cloud Spend\",\r\n    \"kind\": \"BUSINESS_METRIC\",\r\n    \"numberFormat\": \"currency\",\r\n    \"defaultValueExpression\": \"METRIC['estimated_cost']\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Savings Plans'  || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'GCP SUDS and CUDs' || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Gross Spend'\",\r\n            \"valueExpression\": \"METRIC['unblended_cost']\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/internal/business-mappings/metrics",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"internal",
+								"business-mappings",
+								"metrics"
+							]
+						},
+						"description": "POST = Create a Mapping\n\nCreate a single business mapping. See the following curl and JSON body as an example of a business mapping\n\n``` bash\ncurl -X POST https://api.cloudability.com/v3/business-mappings \\\\\n     -H 'Content-Type: application/json' \\\\\n     -H 'apptio-opentoken:<OpenToken>' \\\\\n     -H 'apptio-current-environment: <environment id>' \\\\\n     -u ‘[auth_token]:’ \\\\\n     -d @- << EOF\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Business Metric",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Total Calculated Cloud Spend\",\r\n    \"kind\": \"BUSINESS_METRIC\",\r\n    \"numberFormat\": \"currency\",\r\n    \"defaultValueExpression\": \"METRIC['estimated_cost']\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Savings Plans'  || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'GCP SUDS and CUDs' || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Gross Spend'\",\r\n            \"valueExpression\": \"METRIC['unblended_cost']\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/internal/business-mappings/metrics",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"internal",
+								"business-mappings",
+								"metrics"
+							]
+						},
+						"description": "POST = Create a Mapping\n\nCreate a single business mapping. See the following curl and JSON body as an example of a business mapping\n\n``` bash\ncurl -X POST https://api.cloudability.com/v3/business-mappings \\\\\n     -H 'Content-Type: application/json' \\\\\n     -H 'apptio-opentoken:<OpenToken>' \\\\\n     -H 'apptio-current-environment: <environment id>' \\\\\n     -u ‘[auth_token]:’ \\\\\n     -d @- << EOF\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Business Metric",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Total Calculated Cloud Spend\",\r\n    \"kind\": \"BUSINESS_METRIC\",\r\n    \"numberFormat\": \"currency\",\r\n    \"defaultValueExpression\": \"METRIC['estimated_cost']\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Savings Plans'  || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'GCP SUDS and CUDs' || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Gross Spend'\",\r\n            \"valueExpression\": \"METRIC['unblended_cost']\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/internal/business-mappings//metrics",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"internal",
+								"business-mappings",
+								"",
+								"metrics"
+							]
+						},
+						"description": "POST = Create a Mapping\n\nCreate a single business mapping. See the following curl and JSON body as an example of a business mapping\n\n``` bash\ncurl -X POST https://api.cloudability.com/v3/business-mappings \\\\\n     -H 'Content-Type: application/json' \\\\\n     -H 'apptio-opentoken:<OpenToken>' \\\\\n     -H 'apptio-current-environment: <environment id>' \\\\\n     -u ‘[auth_token]:’ \\\\\n     -d @- << EOF\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Business Metric Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Total Calculated Cloud Spend\",\r\n    \"kind\": \"BUSINESS_METRIC\",\r\n    \"numberFormat\": \"currency\",\r\n    \"defaultValueExpression\": \"METRIC['estimated_cost']\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Savings Plans'  || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'GCP SUDS and CUDs' || BUSINESS_DIMENSION['Total Calculated Cloud Spend'] == 'Gross Spend'\",\r\n            \"valueExpression\": \"METRIC['unblended_cost']\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/internal/business-mappings/metrics",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"internal",
+								"business-mappings",
+								"metrics"
+							]
+						},
+						"description": "POST = Create a Mapping\n\nCreate a single business mapping. See the following curl and JSON body as an example of a business mapping\n\n``` bash\ncurl -X POST https://api.cloudability.com/v3/business-mappings \\\\\n     -H 'Content-Type: application/json' \\\\\n     -H 'apptio-opentoken:<OpenToken>' \\\\\n     -H 'apptio-current-environment: <environment id>' \\\\\n     -u ‘[auth_token]:’ \\\\\n     -d @- << EOF\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a Specific Business Mapping",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/business-mappings/9",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"business-mappings",
+								"9"
+							]
+						},
+						"description": "When calling business mappings from our business mappings (BM) endpoint you will see that each BM matrix has a value for \"index\" (see snip). This is the logistical information that allows us to interact (update/delete/find) a given mapping.\n\n<img src=\"https://content.pstmn.io/e438b270-46c5-4473-a60a-cc368b23677d/aW1hZ2UucG5n\" width=\"707\" height=\"408\">\n\nThe index is automagicly created for new endpoints and can be added to the end of the BM endpoint to interact with that given endpoint. In the case of the above snip you would call:\n\n[https://api.cloudability.com/v3/business-mappings/2](https://api.cloudability.com/v3/business-mappings/2)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Business Mapping",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"AZ\",\r\n    \"defaultValue\": \"South\",\r\n    \"statements\": [\r\n        {\r\n            \"matchExpression\": \"DIMENSION['availability_zone'] == 'us-east-1'\",\r\n            \"valueExpression\": \"'east'\"\r\n        },\r\n        {\r\n            \"matchExpression\": \"DIMENSION['availability_zone'] == 'us-west-1'\",\r\n            \"valueExpression\": \"'west'\"\r\n        },\r\n        {\r\n            \"matchExpression\": \"DIMENSION['availability_zone'] == 'us-north-1'\",\r\n            \"valueExpression\": \"'north'\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.cloudability.com/v3/business-mappings/9",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"business-mappings",
+								"9"
+							]
+						},
+						"description": "**PUT = Update Business Mapping**\n\n**THIS IS A FULL OVERWRITE AND CAN NOT BE REVERTED. IF YOU WANT TO RETAIN A PART OF THE MAPPING, IT MUST BE A PART OF THE PUT REQUEST BODY**"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Business Mapping",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/business-mappings/9",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"business-mappings",
+								"9"
+							]
+						},
+						"description": "DELETE = DELETE BM\n\nCan Not Be Reverted"
+					},
+					"response": []
+				}
+			],
+			"description": "[Business Mappings Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/business_mappings_endpoint.htm)\n\n**Business Mapping** is an activity that allows you to map your cloud cost and usage to custom dimensions and custom metrics that are important to report on within your organization.\n\nBusiness Mapping represents an Admin feature within Cloudability that delivers a special category of 'synthetic' dimensions called **Business Dimensions** and synthetic metrics called **Business Metrics** which can be utilized by all users throughout the platform.\n\n**Business Dimensions** provide a means to allocate your cloud cost and usage data beyond what you can with native cloud mechanisms. You can think of them as having similar properties to vendor tags but with far more flexibility - indeed there's a good chance that some of your Business Dimensions will partially rely on vendor tags.\n\nThe native Cloudability metrics are a set of useful, powerful measures for users to gain insight into their cloud spend and efficiency. However, for bespoke customer use cases, users need to contextualize and customize Cloud spending against business specific KPIs to visualise trends; this will enable stakeholders to make decisions based on data that is meaningful to them and their business. **Business Metrics** are crafted using Business Mapping statements that leverage a combination of existing billing data and customer provided data\n\nThe Business Mappings expression language has a remarkable amount of inbuilt dexterity and therefore our customers will find a myriad of uses for Business Dimensions and Business Metrics.\n\nFor more information about Business Dimensions and also it's GUI admin equivalent please [see this page](https://help.apptio.com/en-us/cloudability/admin/allocate-costs-using-business-dimensions.html).\n\nFor more information about Business Metrics please [see this page](https://help.apptio.com/en-us/cloudability/admin/customize-costs-using-business-metrics.html).\n\n## **How business mapping works**\n\nWhen Cloudability ingests the detailed billing data from cloud vendors we evaluate each and every line item against the \"**matchExpressions**\" within the Business Mapping for each configured Business Dimension and Business Metric. You can think of the list of statements as similar to a case statement, as soon as there is a match then the \"**valueExpression**\" attribute is evaluated and the resultant value used to populate the Business Dimension or Business Metric for that item. This expression could simply be a string or involve a range of operations based on other attributes of the line item itself (such as it's vendor tag values).\n\n**More information about Business Dimensions and Business Metrics**\n\nWe have plenty of material to help you make the most out of Business Mapping.\n\n- Read more about the [structure of a Business Mapping here](https://help.apptio.com/en-us/cloudability/api/v3/structure_of_a_business_mapping.htm)\n- Read more about [the Business Mappings expression language that backs Business Dimensions and Business Metrics here](https://help.apptio.com/en-us/cloudability/api/v3/business_mapping_expression.htm)."
+		},
+		{
+			"name": "200 Account Groups",
+			"item": [
+				{
+					"name": "201 Account Group",
+					"item": [],
+					"description": "## [Manage Account Groups](https://help.apptio.com/en-us/cloudability/api/v3/account_groups_end_point.htm)\n\nAccount Groups function like tags for AWS accounts, Azure Subscriptions and GCP projects. They allow you to assign a key/value pair where Account Group is the key and Account Group Entry maps the value. For example, you might create an Account Group of Environment and use Account Group Entries to assign a value of \"Production\", \"Staging\" or \"Development\" to individual cloud accounts in Cloudability.\n\nIn the Cloudability UI you can define Account Groups and Account Group Entries on the Accounts page. The API lets you perform programmatic CRUD-ing of the Account Groups and account group entries. Only admins can create, update, and delete Account Groups and Entries through the UI and API, while all other users can access the generated dimensions in dashboards and reports.\n\nAn Account Group can have many Account Group Entries, each entry mapping an account/project/subscription’s value for the group. Users are then able to report and filter against these defined account group keys with each one available as a reporting dimension throughout Cloudability.\n\n## End Point Particulars\n\n| | • | /account_groups for all RESTful CRUD interactions |\n\n## The Account Groups Object\n\n| | • | **id** (number) - Unique identifier for the Account Group object |\n\n| | • | **position** (number) – The position of the account group in relation to all other account groups |\n\n| | • | **name** (string) – the name of the account group as it will appear throughout Cloudability |\n\n| | • | **account_group_entry_values** (array) – An informative list of current values for the account group. These values are updated via the Account Group Entries endpoint |"
+				},
+				{
+					"name": "202 Account Group Entries",
+					"item": []
+				}
+			],
+			"description": "An Account Group can have many Account Group Entries, each entry mapping an account/project/subscription’s value for the group. Users are then able to report and filter against these defined account group keys with each one available as a reporting dimension throughout Cloudability."
+		},
+		{
+			"name": "300 Views",
+			"item": [
+				{
+					"name": "Views",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/views",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"views"
+							]
+						},
+						"description": "StartFragment\n\n# Views End Point\n\n## Summary\n\nThe Views API end point can be used for all key tasks as it pertains to managing [Cloudability Views](https://help.apptio.com/en-us/cloudability/admin/create-and-manage-views.html). Cloudability Views allow our customers to give each and every user a unique view or set of views of your cloud spend and usage. It also supports limiting the scope of what is visible to individual users.\n\n- This end point does not support filtering and sorting.\n    \n\n## End Point Particulars\n\n**end point**: /views for all RESTful CRUD interactions\n\n## The Views Object\n\n**id** (string) - Unique identifier for the Views object.\n\n**title** (string) - The name of the view as it will appear to end users\n\n**sharedWithUsers** (array of strings) - The discrete list of users (by their unique identifier) that the view should be shared with\n\n**sharedWithOrganization** (boolean) - Whether the view should be accessible to the entire organization\n\n**ownerId** (string) - Unique identifier for the user who created the view\n\n**filters** (array) - list of filter objects. If multiple filters are applied on the same dimension they are \"OR'd\", however if they are on different dimensions they are \"AND'd\". See below regarding filter specifics.\n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Views Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/views",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"views"
+							]
+						},
+						"description": "StartFragment\n\n# Views End Point\n\n## Summary\n\nThe Views API end point can be used for all key tasks as it pertains to managing [Cloudability Views](https://help.apptio.com/en-us/cloudability/admin/create-and-manage-views.html). Cloudability Views allow our customers to give each and every user a unique view or set of views of your cloud spend and usage. It also supports limiting the scope of what is visible to individual users.\n\n- This end point does not support filtering and sorting.\n    \n\n## End Point Particulars\n\n**end point**: /views for all RESTful CRUD interactions\n\n## The Views Object\n\n**id** (string) - Unique identifier for the Views object.\n\n**title** (string) - The name of the view as it will appear to end users\n\n**sharedWithUsers** (array of strings) - The discrete list of users (by their unique identifier) that the view should be shared with\n\n**sharedWithOrganization** (boolean) - Whether the view should be accessible to the entire organization\n\n**ownerId** (string) - Unique identifier for the user who created the view\n\n**filters** (array) - list of filter objects. If multiple filters are applied on the same dimension they are \"OR'd\", however if they are on different dimensions they are \"AND'd\". See below regarding filter specifics.\n\nEndFragment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "400 Cost Reporting",
+			"item": [
+				{
+					"name": "Call a Report",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/views",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"views"
+							]
+						},
+						"description": "StartFragment\n\n# Views End Point\n\n## Summary\n\nThe Views API end point can be used for all key tasks as it pertains to managing [Cloudability Views](https://help.apptio.com/en-us/cloudability/admin/create-and-manage-views.html). Cloudability Views allow our customers to give each and every user a unique view or set of views of your cloud spend and usage. It also supports limiting the scope of what is visible to individual users.\n\n- This end point does not support filtering and sorting.\n    \n\n## End Point Particulars\n\n**end point**: /views for all RESTful CRUD interactions\n\n## The Views Object\n\n**id** (string) - Unique identifier for the Views object.\n\n**title** (string) - The name of the view as it will appear to end users\n\n**sharedWithUsers** (array of strings) - The discrete list of users (by their unique identifier) that the view should be shared with\n\n**sharedWithOrganization** (boolean) - Whether the view should be accessible to the entire organization\n\n**ownerId** (string) - Unique identifier for the user who created the view\n\n**filters** (array) - list of filter objects. If multiple filters are applied on the same dimension they are \"OR'd\", however if they are on different dimensions they are \"AND'd\". See below regarding filter specifics.\n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Call a Report Copy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apptio-opentoken",
+								"value": "{{apptio-opentoken}}",
+								"type": "text"
+							},
+							{
+								"key": "apptio-current-environment",
+								"value": "{{apptio-current-environment}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://api.cloudability.com/v3/views",
+							"protocol": "https",
+							"host": [
+								"api",
+								"cloudability",
+								"com"
+							],
+							"path": [
+								"v3",
+								"views"
+							]
+						},
+						"description": "StartFragment\n\n# Views End Point\n\n## Summary\n\nThe Views API end point can be used for all key tasks as it pertains to managing [Cloudability Views](https://help.apptio.com/en-us/cloudability/admin/create-and-manage-views.html). Cloudability Views allow our customers to give each and every user a unique view or set of views of your cloud spend and usage. It also supports limiting the scope of what is visible to individual users.\n\n- This end point does not support filtering and sorting.\n    \n\n## End Point Particulars\n\n**end point**: /views for all RESTful CRUD interactions\n\n## The Views Object\n\n**id** (string) - Unique identifier for the Views object.\n\n**title** (string) - The name of the view as it will appear to end users\n\n**sharedWithUsers** (array of strings) - The discrete list of users (by their unique identifier) that the view should be shared with\n\n**sharedWithOrganization** (boolean) - Whether the view should be accessible to the entire organization\n\n**ownerId** (string) - Unique identifier for the user who created the view\n\n**filters** (array) - list of filter objects. If multiple filters are applied on the same dimension they are \"OR'd\", however if they are on different dimensions they are \"AND'd\". See below regarding filter specifics.\n\nEndFragment"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "500 Rightsizing",
+			"item": [
+				{
+					"name": "AWS",
+					"item": [
+						{
+							"name": "EC2",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/recommendations/ec2?vendorAccountIds=&basis=on-demand&filters=recommendations.defaultsOrder%3D%3D1&limit=25&maxRecsPerResource=1&offset=0&product=ec2&sort=-recommendations.savings&duration=thirty-day&viewId=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"recommendations",
+										"ec2"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1"
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2"
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings"
+										},
+										{
+											"key": "viewId",
+											"value": "167370",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EC2-ASG",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/recommendations/ec2-asg?basis=on-demand&duration=thirty-day&filters=recommendations.defaultsOrder%3D%3D1&limit=25&maxRecsPerResource=1&offset=0&product=ec2-asg&sort=-recommendations.savings&vendorAccountIds=&viewId=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"recommendations",
+										"ec2-asg"
+									],
+									"query": [
+										{
+											"key": "basis",
+											"value": "on-demand"
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1"
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n"
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n"
+										},
+										{
+											"key": "product",
+											"value": "ec2-asg",
+											"description": "Product Name, Example ec2, ebs, s3"
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)"
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": ""
+										},
+										{
+											"key": "viewId",
+											"value": "0",
+											"description": "The number of the View If blank, the view will be your default view."
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EBS",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/recommendations/ebs?vendorAccountIds=&basis=on-demand&duration=thirty-day&limit=25&maxRecsPerResource=1&offset=0&sort=-recommendations.savings&viewId=0&filters=recommendations.rank%3D%3D1&product=ebs",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"recommendations",
+										"ebs"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services"
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings"
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.rank%3D%3D1"
+										},
+										{
+											"key": "product",
+											"value": "ebs"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "S3",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/recommendations/s3?vendorAccountIds=&basis=on-demand&duration=thirty-day&limit=25&maxRecsPerResource=1&offset=0&sort=-recommendations.savings&viewId=0&filters=recommendations.rank%3D%3D1&product=s3",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"recommendations",
+										"s3"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services"
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings"
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.rank%3D%3D1"
+										},
+										{
+											"key": "product",
+											"value": "s3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RDS",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/recommendations/rds?vendorAccountIds=&basis=on-demand&duration=thirty-day&limit=25&maxRecsPerResource=1&offset=0&viewId=0&filters=recommendations.preferenceOrder%3D%3D1&product=rds&sort=-topSavings",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"recommendations",
+										"rds"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services"
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.preferenceOrder%3D%3D1"
+										},
+										{
+											"key": "product",
+											"value": "rds"
+										},
+										{
+											"key": "sort",
+											"value": "-topSavings"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Redshift",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/aws/underutilized/redshift?filters=&vendorAccountIds=&duration=thirty-day&limit=25&offset=0&viewId=0&basis=cost&product=redshift&sort=-priority",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"aws",
+										"underutilized",
+										"redshift"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": ""
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										},
+										{
+											"key": "basis",
+											"value": "cost"
+										},
+										{
+											"key": "product",
+											"value": "redshift"
+										},
+										{
+											"key": "sort",
+											"value": "-priority"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Azure",
+					"item": [
+						{
+							"name": "Compute",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/azure/recommendations/compute",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"azure",
+										"recommendations",
+										"compute"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day",
+											"disabled": true
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SQL Database",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/azure/recommendations/sql",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"azure",
+										"recommendations",
+										"sql"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day",
+											"disabled": true
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Managed Disk",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/azure/recommendations/disk",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"azure",
+										"recommendations",
+										"disk"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day",
+											"disabled": true
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "GCP",
+					"item": [
+						{
+							"name": "GCE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/gcp/recommendations/compute?vendorAccountIds=&basis=on-demand&duration=thirty-day&limit=25&maxRecsPerResource=1&offset=0&sort=-recommendations.savings&viewId=0&filters=recommendations.preferenceOrder%3D%3D1&product=gcp-compute",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"gcp",
+										"recommendations",
+										"compute"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333"
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services"
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25"
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings"
+										},
+										{
+											"key": "viewId",
+											"value": "0"
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.preferenceOrder%3D%3D1"
+										},
+										{
+											"key": "product",
+											"value": "gcp-compute"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GDP",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/rightsizing/gcp/recommendations/disk",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"rightsizing",
+										"gcp",
+										"recommendations",
+										"disk"
+									],
+									"query": [
+										{
+											"key": "filters",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "",
+											"description": "Set a maximum number of recommendations to be delivered with each resource. Example: maxRecsPerResource=10 default = 1\n\n",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "",
+											"description": "Product Name, Example ec2, ebs, s3",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "",
+											"description": "Sort the resources based on an attribute of your choice. Read more about sorting.\n\nExample: sort=-name (sort by name descending)\n\nDefault: sort=-recommendations.savings ( sort resources with highest savings potential descending)",
+											"disabled": true
+										},
+										{
+											"key": "source",
+											"value": "",
+											"description": "Source system for utilization data Examples: datadog, cloudwatch",
+											"disabled": true
+										},
+										{
+											"key": "vendorAccountIds",
+											"value": "",
+											"description": "Filter to a list of vendor accounts. Separate accounts using commas. Example: vendorAccountIds=999988887777,111122223333",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "",
+											"description": "The number of the View If blank, the view will be your default view.",
+											"disabled": true
+										},
+										{
+											"key": "basis",
+											"value": "on-demand",
+											"description": "REQUIRED The cost basis used.\n\nValues are on-demand or effective\n\nDefault = on-demand\n\nNote: the effective cost basis is available for EC2 and RDS services",
+											"disabled": true
+										},
+										{
+											"key": "duration",
+											"value": "thirty-day",
+											"disabled": true
+										},
+										{
+											"key": "filters",
+											"value": "recommendations.defaultsOrder%3D%3D1",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "25",
+											"disabled": true
+										},
+										{
+											"key": "maxRecsPerResource",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "product",
+											"value": "ec2",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "-recommendations.savings",
+											"disabled": true
+										},
+										{
+											"key": "viewId",
+											"value": "0",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "StartFragment\n\n| <br><br>Argument<br><br> | <br><br>Description<br><br> |\n| --- | --- |\n| <br><br>`basis` (required)<br><br> | <br><br>The cost basis used.<br><br>Values are `on-demand` or `effective`<br><br>Default = `on-demand`<br><br>Note: the `effective` cost basis is available for EC2 and RDS services<br><br> |\n| <br><br>`duration` (required)<br><br> | <br><br>The look back period in days, used for calculating the recommendations.<br><br>Valid values are : `ten-day` and `thirty-day` Default = `ten-day`<br><br>Note: only `thirty-day` is available for S3<br><br> |\n| <br><br>`filters`<br><br> | <br><br>Filter the resources based on an attribute of your choice. Example: `filters=recommendations.action==Rightsize`. To base on attribute within recommendation itself prefix with 'recommendations.'. Multiple filters can be chained together with commas. Example: `filters=recommendations.savings>20,recommendations.risk==0`[Read more](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm#Filterin) for more details on filtering.<br><br> |\n| <br><br>`limit` (required)<br><br> | <br><br>Used together with `offset` to [provide pagination](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm#Paginati). Example: `limit=10`. default = 50<br><br> |\n| <br><br>`maxRecsPerResource`<br><br> | <br><br>Set a maximum number of recommendations to be delivered with each resource. Example: `maxRecsPerResource=10` default = 1<br><br> |\n| <br><br>`offset`<br><br> | <br><br>Used together with `limit` to [provide pagination](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm#Paginati). Example: `offset=0` default = 0<br><br> |\n| <br><br>`product`<br><br> | <br><br>Product Name, Example ec2, ebs, s3<br><br> |\n| <br><br>`sort`<br><br> | <br><br>Sort the resources based on an attribute of your choice. [Read more](https://help.apptio.com/en-us/cloudability/api/v3/getting_started_with_the_cloudability.htm#Sorting) about sorting.<br><br>Example: `sort=-name` (sort by name descending)<br><br>Default: `sort=-recommendations.savings` ( sort resources with highest savings potential descending)<br><br> |\n| <br><br>`source`<br><br> | <br><br>Source system for utilization data Examples: `datadog`, `cloudwatch`<br><br> |\n| <br><br>`vendorAccountIds`<br><br> | <br><br>Filter to a list of vendor accounts. Separate accounts using commas. Example: `vendorAccountIds=999988887777,111122223333`<br><br> |\n| <br><br>`viewId`<br><br> | <br><br>The number of the [View](https://help.apptio.com/en-us/cloudability/api/v3/views_end_point.htm) If blank, the view will be your default view.<br><br> |\n\nEndFragment"
+		},
+		{
+			"name": "600 Credentialing",
+			"item": [
+				{
+					"name": "601 AWS Credentials",
+					"item": [
+						{
+							"name": "Get AWS Accounts",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/aws/accounts?viewid=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"aws",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "viewid",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						},
+						{
+							"name": "Create Account Credential",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"type\": \"aws_role\",\r\n\"vendorAccountId\": \"{{vendorAccountId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/aws/accounts?viewid=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"aws",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "viewid",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						},
+						{
+							"name": "Change Linked Account External ID or Role Name",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"aws_role\",\r\n    \"roleName\": \"CloudabilityRole\",\r\n    \"externalId\": \"{{externalId}},\r\n    \"parentAccountId\": \"{{master pay}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/AWS/accounts/{{vendorAccountId}}?viewId=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"AWS",
+										"accounts",
+										"{{vendorAccountId}}"
+									],
+									"query": [
+										{
+											"key": "viewId",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						},
+						{
+							"name": "Change Master Account External ID or Role Name",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"aws_role\",\r\n    \"roleName\": \"CloudabilityRole\",\r\n    \"externalId\": \"{{externalId}},\r\n    \"parentAccountId\": \"{{master pay}}\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/AWS/accounts/{{vendorAccountId}}?viewId=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"AWS",
+										"accounts",
+										"{{vendorAccountId}}"
+									],
+									"query": [
+										{
+											"key": "viewId",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Accounts",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"type\": \"aws_role\",\r\n\"vendorAccountId\": \"{{vendorAccountId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/aws/accounts?viewid=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"aws",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "viewid",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "602 Azure Credentials",
+					"item": [
+						{
+							"name": "Get Azure Accounts",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/azure/accounts?viewid=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"azure",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "viewid",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "603 GCP Credentials",
+					"item": [
+						{
+							"name": "Get GCP Accounts",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "apptio-opentoken",
+										"value": "{{apptio-opentoken}}",
+										"type": "text"
+									},
+									{
+										"key": "apptio-current-environment",
+										"value": "{{apptio-current-environment}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://api.cloudability.com/v3/vendors/azure/accounts?viewid=0",
+									"protocol": "https",
+									"host": [
+										"api",
+										"cloudability",
+										"com"
+									],
+									"path": [
+										"v3",
+										"vendors",
+										"azure",
+										"accounts"
+									],
+									"query": [
+										{
+											"key": "viewid",
+											"value": "0"
+										}
+									]
+								},
+								"description": "Allows you to get a list of all current business mappings."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "[Business Mappings Endpoint](https://help.apptio.com/en-us/cloudability/api/v3/business_mappings_endpoint.htm)\n\n**Business Mapping** is an activity that allows you to map your cloud cost and usage to custom dimensions and custom metrics that are important to report on within your organization.\n\nBusiness Mapping represents an Admin feature within Cloudability that delivers a special category of 'synthetic' dimensions called **Business Dimensions** and synthetic metrics called **Business Metrics** which can be utilized by all users throughout the platform.\n\n**Business Dimensions** provide a means to allocate your cloud cost and usage data beyond what you can with native cloud mechanisms. You can think of them as having similar properties to vendor tags but with far more flexibility - indeed there's a good chance that some of your Business Dimensions will partially rely on vendor tags.\n\nThe native Cloudability metrics are a set of useful, powerful measures for users to gain insight into their cloud spend and efficiency. However, for bespoke customer use cases, users need to contextualize and customize Cloud spending against business specific KPIs to visualise trends; this will enable stakeholders to make decisions based on data that is meaningful to them and their business. **Business Metrics** are crafted using Business Mapping statements that leverage a combination of existing billing data and customer provided data\n\nThe Business Mappings expression language has a remarkable amount of inbuilt dexterity and therefore our customers will find a myriad of uses for Business Dimensions and Business Metrics.\n\nFor more information about Business Dimensions and also it's GUI admin equivalent please [see this page](https://help.apptio.com/en-us/cloudability/admin/allocate-costs-using-business-dimensions.html).\n\nFor more information about Business Metrics please [see this page](https://help.apptio.com/en-us/cloudability/admin/customize-costs-using-business-metrics.html).\n\n## **How business mapping works**\n\nWhen Cloudability ingests the detailed billing data from cloud vendors we evaluate each and every line item against the \"**matchExpressions**\" within the Business Mapping for each configured Business Dimension and Business Metric. You can think of the list of statements as similar to a case statement, as soon as there is a match then the \"**valueExpression**\" attribute is evaluated and the resultant value used to populate the Business Dimension or Business Metric for that item. This expression could simply be a string or involve a range of operations based on other attributes of the line item itself (such as it's vendor tag values).\n\n**More information about Business Dimensions and Business Metrics**\n\nWe have plenty of material to help you make the most out of Business Mapping.\n\n- Read more about the [structure of a Business Mapping here](https://help.apptio.com/en-us/cloudability/api/v3/structure_of_a_business_mapping.htm)\n- Read more about [the Business Mappings expression language that backs Business Dimensions and Business Metrics here](https://help.apptio.com/en-us/cloudability/api/v3/business_mapping_expression.htm)."
+		},
+		{
+			"name": "Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "apptio-opentoken",
+						"value": "{{apptio-opentoken}}",
+						"type": "text"
+					},
+					{
+						"key": "apptio-current-environment",
+						"value": "{{apptio-current-environment}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://api.cloudability.com/v3/user",
+					"protocol": "https",
+					"host": [
+						"api",
+						"cloudability",
+						"com"
+					],
+					"path": [
+						"v3",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
