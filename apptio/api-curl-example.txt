@@ -1,0 +1,48 @@
+Access Administration API: cURL sample commands
+Once parameters have been updated, the following client URL (cURL) sample commands can be used.
+
+User login and authentication
+1.	Via user name and password:
+
+curl -i -X POST https://frontdoor.apptio.com/service/nonuilogin -H 'Accept:application/json' -H 'content-type:application/json' -H 'host:frontdoor.apptio.com' -d '{"ping_uname":"admin@acme.com","ping_pwd":"Password1@"}'
+
+Return header: apptio-opentoken that should be passed as a header in other API calls.
+NOTICE
+This operation is allowed for non-SSO accounts only.
+
+2.	Via API keys:
+
+curl -i -X POST https://frontdoor.apptio.com/service/apikeylogin -H 'Accept:application/json' -H 'content-type:application/json' -d '{"keyAccess":"d2eaa2af-78ec-47db-98c1-ec1416b29ac8","keySecret":"rg0yprL0NW841pPpJbOtLa0feIx0HtMymberRyVAzKHTybumVGAv0Z4Zx7ET"}'
+
+Return header: apptio-opentoken that should be passed as a header in other API calls.
+Create user
+curl -i -X POST https://frontdoor.apptio.com/api/user -H 'content-type:application/json' -H 'apptio-opentoken:36d9c8b4129e835218952c229ccfcaf9ab1906e43d6da66a0a57ae426aab71a607c16bea57a198b5f8aae8ae509d9d0c' -d '{"login":"temp@acme.com","email":"temp@acme.com","domain":"acme","accountType":"STANDARD","full:"Temp User"}'
+
+NOTICE
+Pass apptio-opentoken value received from previous (1).
+
+Get user
+curl -i -X GET https://frontdoor.apptio.com/api/user/temp@acme.com -H 'content-type:application/json' -H 'apptio-opentoken:46c0a0f761dc1691460f26def6a9955ab2d0654f955581eee85ae6d8fadcbdf4a18b1d5347644839d186045dd787d2ff'
+
+Update user
+curl -i -X PUT https://frontdoor.apptio.com/api/user -H 'content-type:application/json' -H 'apptio-opentoken:36d9c8b4129e835218952c229ccfcaf9ab1906e43d6da66a0a57ae426aab71a607c16bea57a198b5f8aae8ae509d9d0c' -d '{"login": "temp@acme.com","email":"tempemail@acme.com","full:"Temp User Account"}'
+
+Delete user
+curl -i -X DELETE https://frontdoor.apptio.com/api/user -H 'content-type:application/json' -H 'apptio-opentoken:36d9c8b4129e835218952c229ccfcaf9ab1906e43d6da66a0a57ae426aab71a607c16bea57a198b5f8aae8ae509d9d0c' -d '{"id": "temp@acme.com"}'
+
+Get environment information
+curl -i -X GET https://frontdoor.apptio.com/api/environment/newco.com/main -H 'accept: application/json' -H 'apptio-opentoken: 40ffaaa19c936e201b5152573850a3c0016645d4da62d282fea9ccb9177dd070946df38bebd3c4b4ae1e3cd725f05b72'
+
+Get all domain users
+curl -i -X GET https://frontdoor.apptio.com/api/v2/users/search?domainName=acme&hideInactive=false&start=0&pageSize=100&sortBy=login -H 'accept: application/json' H 'apptio-opentoken: 40ffaaa19c936e201b5152573850a3c0016645d4da62d282fea9ccb9177dd070946df38bebd3c4b4ae1e3cd725f05b72'
+
+Get environment users
+curl -i -X GET 'https://frontdoor.apptio.com/api/v2/environmentusers/environment/d8829rd7-0g5e-5478-b1561-52d955dd5dac9?start=0&pageSize=100&sortBy=login&export=false&hideInactives=false' -H 'accept: application/json' -H 'apptio-opentoken: 40ffaaa19c936e201b5152573850a3c0016645d4da62d282fea9ccb9177dd070946df38bebd3c4b4
+
+Get the authentication report for a domain
+curl -i -X GET https://frontdoor.apptio.com/api/audit/domain/authentication/{domainName} -H 'content-type:application/json' -H 'apptio-opentoken: < your open token value> 
+
+
+
+© Copyright Apptio, an IBM Company 2025 All rights reserved.
+
